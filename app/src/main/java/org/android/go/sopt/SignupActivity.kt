@@ -24,6 +24,8 @@ class SignupActivity : AppCompatActivity() {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.putExtra("id", binding.etID.text.toString())
                 intent.putExtra("password", binding.etPW.text.toString())
+                intent.putExtra("name", binding.etName.text.toString())
+                intent.putExtra("hobby", binding.etHobby.text.toString())
                 setResult(RESULT_OK, intent)
                 finish()
 

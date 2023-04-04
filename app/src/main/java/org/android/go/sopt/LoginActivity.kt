@@ -30,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK){
                 val id = result.data?.getStringExtra("id") ?: ""
                 val password = result.data?.getStringExtra("password")?:""
+                val name = result.data?.getStringExtra("name") ?:""
+                val hobby = result.data?.getStringExtra("hobby")?:""
 
                 Snackbar.make(
                     binding.root,
@@ -41,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
                 if (binding.etID.text.toString() == id && binding.etPW.text.toString() == password) {
                     Toast.makeText(this, "로그인 성공", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("name", name)
+                    intent.putExtra("hobby", hobby)
                     startActivity(intent)
                 } else {
                     Snackbar.make(
