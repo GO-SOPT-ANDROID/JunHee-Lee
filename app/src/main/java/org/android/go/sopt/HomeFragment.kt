@@ -27,7 +27,31 @@ class HomeFragment : Fragment() {
         Music(
             "music3",
             "artist3"
+        ),
+        Music(
+            "music4",
+            "artist4"
+        ),
+        Music(
+            "music5",
+            "artist5"
+        ),
+        Music(
+            "music6",
+            "artist6"
+        ),
+        Music(
+            "music7",
+            "artist7"
+        ),
+        Music(
+            "music8",
+            "artist8"
         )
+
+
+
+
     )
 
 
