@@ -7,7 +7,7 @@ import org.android.go.sopt.databinding.ActivityHomeBinding
 
 
 class HomeActivity : AppCompatActivity() {
-    lateinit  var binding : ActivityHomeBinding
+    lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -43,13 +43,12 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-        private fun changeFragment(fragment: Fragment) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit()
+    private fun changeFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .commit()
     }
 
 
-
- }
+}

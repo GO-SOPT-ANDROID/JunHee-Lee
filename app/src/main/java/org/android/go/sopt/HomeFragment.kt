@@ -15,7 +15,7 @@ class HomeFragment : Fragment() {
         get() = requireNotNull(_binding) { "앗 binding이 null 이다!" }
 
 
-    private val itemlist =listOf(
+    private val itemlist = listOf(
         Music(
             "music1",
             "artist1"
@@ -50,10 +50,7 @@ class HomeFragment : Fragment() {
         )
 
 
-
-
     )
-
 
 
     override fun onCreateView(
@@ -69,10 +66,10 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val musicadapter = MyAdapter(requireContext())
         val headerAdapter = HeaderAdapter(requireContext())
-        val adapter = ConcatAdapter(headerAdapter,musicadapter)
+        val adapter = ConcatAdapter(headerAdapter, musicadapter)
         binding.rvHome.adapter = adapter
         binding.rvHome.layoutManager = LinearLayoutManager(context)
-        musicadapter.setmusicList(itemlist)
+        musicadapter.submitList(itemlist)
 
 
     }

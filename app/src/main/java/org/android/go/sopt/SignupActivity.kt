@@ -8,7 +8,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.databinding.ActivitySignupBinding
 
 class SignupActivity : AppCompatActivity() {
-    lateinit  var binding : ActivitySignupBinding
+    lateinit var binding: ActivitySignupBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
@@ -17,10 +17,11 @@ class SignupActivity : AppCompatActivity() {
         clickSignUp_end()
     }
 
-    private fun clickSignUp_end(){
+
+    private fun clickSignUp_end() {
 
         binding.btnSignupEnd.setOnClickListener {
-            if(binding.etName.length() > 0 &&binding.etID.length()in 6..10 && binding.etPW.length()in 8..12 && binding.etHobby.length() > 0 ){
+            if (binding.etName.length() > 0 && binding.etID.length() in 6..10 && binding.etPW.length() in 8..12 && binding.etHobby.length() > 0) {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.putExtra("id", binding.etID.text.toString())
                 intent.putExtra("password", binding.etPW.text.toString())

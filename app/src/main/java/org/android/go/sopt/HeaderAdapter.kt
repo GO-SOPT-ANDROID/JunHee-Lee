@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.android.go.sopt.databinding.ItemHeaderBinding
 
 
-class HeaderAdapter (context: Context) :  RecyclerView.Adapter<HeaderAdapter.HeaderViewHolder>() {
+class HeaderAdapter(context: Context) : RecyclerView.Adapter<HeaderAdapter.HeaderViewHolder>() {
     private val inflater by lazy { LayoutInflater.from(context) }
 
     class HeaderViewHolder(private val binding: ItemHeaderBinding) :

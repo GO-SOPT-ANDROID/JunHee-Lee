@@ -9,12 +9,20 @@ import org.android.go.sopt.databinding.FragmentGalleryBinding
 
 
 class GalleryFragment : Fragment() {
-    private lateinit var binding: FragmentGalleryBinding
+    private var _binding: FragmentGalleryBinding? = null
+    private val binding: FragmentGalleryBinding
+        get() = requireNotNull(_binding)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 }

@@ -3,13 +3,13 @@ package org.android.go.sopt
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.android.go.sopt.databinding.ItemMusicBinding
 
-class MyAdapter(context: Context) : RecyclerView.Adapter<MyAdapter.MusicViewHolder>() {
+class MyAdapter(context: Context) : ListAdapter<Music, MyAdapter.MusicViewHolder>(diffUtil) {
     private val inflater by lazy { LayoutInflater.from(context) }
-
-    private var itemlist: List<Music> = emptyList()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
@@ -17,10 +17,9 @@ class MyAdapter(context: Context) : RecyclerView.Adapter<MyAdapter.MusicViewHold
         return MusicViewHolder(binding)
     }
 
-    override fun getItemCount() = itemlist.size
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
-        holder.onBind(itemlist[position])
+        holder.onBind(currentList[position])
     }
 
     class MusicViewHolder(private val binding: ItemMusicBinding) :
@@ -30,10 +29,17 @@ class MyAdapter(context: Context) : RecyclerView.Adapter<MyAdapter.MusicViewHold
             binding.tvMusicname.text = item.music_name
             binding.tvArtistname.text = item.artist_name
         }
-        }
+    }
 
-    fun setmusicList(musicList: List<Music>) {
-        this.itemlist = musicList.toList()
-        notifyDataSetChanged()
+    companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<Music>() {
+            override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
+                return oldItem.artist_name == newItem.artist_name
+            }
+
+            override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
+                return oldItem.hashCode() == newItem.hashCode()
+            }
+        }
     }
 }
