@@ -5,3 +5,6 @@ data class Music(
     val artist_name: String
 )
 
+data class Pager(
+    val image_ex : Int
+)

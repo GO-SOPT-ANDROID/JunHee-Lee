@@ -19,7 +19,7 @@ class MyAdapter(context: Context) : ListAdapter<Music, MyAdapter.MusicViewHolder
 
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
-        holder.onBind(currentList[position])
+        holder.onBind(getItem(position))
     }
 
     class MusicViewHolder(private val binding: ItemMusicBinding) :
