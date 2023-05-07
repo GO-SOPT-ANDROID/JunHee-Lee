@@ -23,12 +23,12 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="false">
 
         </activity>
         <activity
             android:name=".SignupActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>
