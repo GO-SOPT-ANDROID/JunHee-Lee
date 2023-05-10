@@ -1,4 +1,4 @@
-package org.android.go.sopt
+package org.android.go.sopt.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.android.go.sopt.HomeServicePool
+import org.android.go.sopt.Music
 import org.android.go.sopt.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
         get() = requireNotNull(_binding) { "앗 binding이 null 이다!" }
+    private val homeService = HomeServicePool.homeService
 
 
     private val itemlist = listOf(

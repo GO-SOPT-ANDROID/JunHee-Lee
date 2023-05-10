@@ -1,4 +1,4 @@
-package org.android.go.sopt
+package org.android.go.sopt.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import org.android.go.sopt.Music
 import org.android.go.sopt.databinding.ItemMusicBinding
 
 class MyAdapter(context: Context) : ListAdapter<Music, MyAdapter.MusicViewHolder>(diffUtil) {

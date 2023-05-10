@@ -1,4 +1,4 @@
-package org.android.go.sopt
+package org.android.go.sopt.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -16,7 +16,7 @@ class HeaderAdapter(context: Context) : RecyclerView.Adapter<HeaderAdapter.Heade
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
         val binding = ItemHeaderBinding.inflate(inflater, parent, false)
-        return HeaderAdapter.HeaderViewHolder(binding)
+        return HeaderViewHolder(binding)
     }
 
     override fun getItemCount(): Int = 1

@@ -1,4 +1,4 @@
-package org.android.go.sopt
+package org.android.go.sopt.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
