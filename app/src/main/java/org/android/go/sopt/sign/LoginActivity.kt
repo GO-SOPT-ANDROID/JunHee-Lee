@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import org.android.go.sopt.R
 import org.android.go.sopt.RequestLogin
 import org.android.go.sopt.ResponseLogin
 import org.android.go.sopt.SignServicePool
@@ -39,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     Snackbar.make(
-                        binding.root, "회원가입이 완료되었습니다.", Snackbar.LENGTH_SHORT
+                        binding.root, getString(R.string.signup_complete), Snackbar.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -62,21 +63,13 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(
                                 this@LoginActivity, it, Toast.LENGTH_SHORT
                             ).show()
-                        } ?: "로그인 성공!"
+                        } ?: getString(R.string.login_complete)
                         startActivity(intent)
 
                     } else {
-                        // 실패한 응답
-                        response.body()?.message?.let {
-                            Toast.makeText(
-                                this@LoginActivity, it, Toast.LENGTH_SHORT
-                            ).show()
-                        } ?: "서버통신 실패(40X)"
-
-
                         Snackbar.make(
                             binding.root,
-                            "정보 입력이 잘못되었습니다.",
+                            getString(R.string.wrong_input),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }

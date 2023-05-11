@@ -22,7 +22,7 @@ interface SignService {
 interface HomeService {
     @GET("/api/users")
     fun listuser(
-       @Query("page") page:Int = 2
+        @Query("page") page: Int = 2
     ): Call<ResponseHome>
 }
 

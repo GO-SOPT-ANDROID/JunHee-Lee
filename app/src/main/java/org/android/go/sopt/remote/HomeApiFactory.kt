@@ -15,11 +15,10 @@ object HomeApiFactory {
     }
 
 
-
     inline fun <reified T> create(): T = retrofit.create<T>(T::class.java)
 }
 
-object HomeServicePool{
+object HomeServicePool {
     val homeService = HomeApiFactory.create<HomeService>()
 }
 

@@ -15,7 +15,6 @@ object SignApiFactory {
     }
 
 
-
     inline fun <reified T> create(): T = retrofit.create<T>(T::class.java)
 }
 

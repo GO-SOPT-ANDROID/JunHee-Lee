@@ -32,6 +32,7 @@ data class ResponseHome(
         @SerialName("last_name")
         val last_name: String
     )
+
     @Serializable
     data class Support(
         @SerialName("text")

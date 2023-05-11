@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.android.go.sopt.R
 import org.android.go.sopt.RequestSignUpDto
 import org.android.go.sopt.ResponseSignUpDto
 import org.android.go.sopt.SignServicePool
@@ -27,7 +28,7 @@ class SignupActivity : AppCompatActivity() {
         binding.etHobby.isEnabled = false
         binding.btnSignupEnd.isEnabled = false
 
-        binding.etName.addTextChangedListener(object : TextWatcher{
+        binding.etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -35,7 +36,7 @@ class SignupActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.etID.isEnabled = binding.etName.text.isNotBlank()
 
-                if(binding.etName.text.isNotBlank()){
+                if (binding.etName.text.isNotBlank()) {
                     binding.btnSignupEnd.isEnabled = false
                 }
             }
@@ -46,7 +47,7 @@ class SignupActivity : AppCompatActivity() {
 
         })
 
-        binding.etID.addTextChangedListener(object : TextWatcher{
+        binding.etID.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -61,7 +62,7 @@ class SignupActivity : AppCompatActivity() {
 
         })
 
-        binding.etPW.addTextChangedListener(object : TextWatcher{
+        binding.etPW.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -76,7 +77,7 @@ class SignupActivity : AppCompatActivity() {
 
         })
 
-        binding.etHobby.addTextChangedListener(object : TextWatcher{
+        binding.etHobby.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -94,8 +95,6 @@ class SignupActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun canUserSignIn(): Boolean {
         return binding.etID.text.length in 6..10
                 && binding.etPW.text.length in 8..12
@@ -107,36 +106,50 @@ class SignupActivity : AppCompatActivity() {
 
         binding.btnSignupEnd.setOnClickListener {
 
-                signService.signup(
-                    with(binding) {
-                        RequestSignUpDto(
-                            etID.text.toString(),
-                            etPW.text.toString(),
-                            etName.text.toString(),
-                            etHobby.text.toString()
-                        )
-                    }
-                ).enqueue(object : retrofit2.Callback<ResponseSignUpDto> {
-                    override fun onResponse(
-                        call: Call<ResponseSignUpDto>,
-                        response: Response<ResponseSignUpDto>,
-                    ) {
-                        if (response.isSuccessful) {
-                            response.body()?.message?.let { Toast.makeText( this@SignupActivity ,it, Toast.LENGTH_SHORT).show()} ?: "회원가입에 성공했습니다."
+            signService.signup(
+                with(binding) {
+                    RequestSignUpDto(
+                        etID.text.toString(),
+                        etPW.text.toString(),
+                        etName.text.toString(),
+                        etHobby.text.toString()
+                    )
+                }
+            ).enqueue(object : retrofit2.Callback<ResponseSignUpDto> {
+                override fun onResponse(
+                    call: Call<ResponseSignUpDto>,
+                    response: Response<ResponseSignUpDto>,
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.message?.let {
+                            Toast.makeText(
+                                this@SignupActivity,
+                                it,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } ?: getString(R.string.signup_complete)
 
-                            if (!isFinishing) finish()
-                        } else {
-                            // 실패한 응답
-                            response.body()?.message?.let { Toast.makeText( this@SignupActivity ,it, Toast.LENGTH_SHORT).show() } ?: "서버통신 실패(40X)"
-                        }
+                        if (!isFinishing) finish()
+                    } else {
+                        // 실패한 응답
+                        response.body()?.message?.let {
+                            Toast.makeText(
+                                this@SignupActivity,
+                                it,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } ?: "서버통신 실패(40X)"
                     }
+                }
 
-                    override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
-                        // 왜 안 오노
-                        t.message?.let { Toast.makeText( this@SignupActivity ,it, Toast.LENGTH_SHORT).show() } ?: "서버통신 실패(응답값 X)"
-                    }
-                })
-            }
+                override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
+                    // 왜 안 오노
+                    t.message?.let {
+                        Toast.makeText(this@SignupActivity, it, Toast.LENGTH_SHORT).show()
+                    } ?: "서버통신 실패(응답값 X)"
+                }
+            })
         }
-
     }
+
+}
