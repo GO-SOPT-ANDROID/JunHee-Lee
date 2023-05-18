@@ -15,7 +15,7 @@ data class RequestLogin(
 @Serializable
 data class ResponseLogin(
     @SerialName("data")
-    val data: Data,
+    val data: Data?,
     @SerialName("status")
     val status: Int,
     @SerialName("message")

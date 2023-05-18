@@ -3,6 +3,7 @@ package org.android.go.sopt.sign
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,9 +68,10 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(intent)
 
                     } else {
+                        Log.d("ffffff",response.body().toString())
                         Snackbar.make(
                             binding.root,
-                            getString(R.string.wrong_input),
+                            response.body().toString(),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
