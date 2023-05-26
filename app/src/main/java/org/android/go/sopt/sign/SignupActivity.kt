@@ -1,26 +1,32 @@
 package org.android.go.sopt.sign
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import org.android.go.sopt.R
 import org.android.go.sopt.RequestSignUpDto
 import org.android.go.sopt.ResponseSignUpDto
 import org.android.go.sopt.SignServicePool
+import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.databinding.ActivitySignupBinding
 import retrofit2.Call
 import retrofit2.Response
 
 class SignupActivity : AppCompatActivity() {
-    lateinit var binding: ActivitySignupBinding
-    private val signService = SignServicePool.signService
+    private val binding by lazy { ActivitySignupBinding.inflate(layoutInflater) }
+
+    // LiveData가 저장되어 있는 ViewModel
+    private val viewModel: SignupViewModel by viewModels<SignupViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.etID.isEnabled = false
@@ -79,7 +85,27 @@ class SignupActivity : AppCompatActivity() {
             }
 
         })
-        clickSignUp_end()
+
+
+        binding.btnSignupEnd.setOnClickListener {
+            viewModel.signUp(
+                binding.etID.text.toString(),
+                binding.etPW.text.toString(),
+                binding.etName.text.toString(),
+                binding.etHobby.text.toString()
+            )
+        }
+
+        viewModel.signUpResult.observe(this) { signupResult ->
+            startActivity(
+                Intent(
+                    this@SignupActivity,
+                    LoginActivity::class.java
+                )
+            )
+        }
+
+
     }
 
 
@@ -87,48 +113,5 @@ class SignupActivity : AppCompatActivity() {
         return binding.etID.text.length in 6..10 && binding.etPW.text.length in 8..12 && binding.etName.text.isNotBlank() && binding.etHobby.text.isNotBlank()
     }
 
-    private fun clickSignUp_end() {
-
-        binding.btnSignupEnd.setOnClickListener {
-
-            signService.signup(with(binding) {
-                RequestSignUpDto(
-                    etID.text.toString(),
-                    etPW.text.toString(),
-                    etName.text.toString(),
-                    etHobby.text.toString()
-                )
-            }).enqueue(object : retrofit2.Callback<ResponseSignUpDto> {
-                override fun onResponse(
-                    call: Call<ResponseSignUpDto>,
-                    response: Response<ResponseSignUpDto>,
-                ) {
-                    if (response.isSuccessful) {
-                        response.body()?.message?.let {
-                            Toast.makeText(
-                                this@SignupActivity, it, Toast.LENGTH_SHORT
-                            ).show()
-                        } ?: getString(R.string.signup_complete)
-
-                        if (!isFinishing) finish()
-                    } else {
-                        // 실패한 응답
-                        response.body()?.message?.let {
-                            Toast.makeText(
-                                this@SignupActivity, it, Toast.LENGTH_SHORT
-                            ).show()
-                        } ?: "서버통신 실패(40X)"
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
-                    // 왜 안 오노
-                    t.message?.let {
-                        Toast.makeText(this@SignupActivity, it, Toast.LENGTH_SHORT).show()
-                    } ?: "서버통신 실패(응답값 X)"
-                }
-            })
-        }
-    }
 
 }

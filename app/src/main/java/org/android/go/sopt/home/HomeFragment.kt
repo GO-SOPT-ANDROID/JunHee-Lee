@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
                 if (response.isSuccessful) {
                     response.body()?.data?.let {
                         homeadapter.submitList(it)
+                        Log.d("listlist", it.toString())
                     }
                 }
             }
