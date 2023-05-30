@@ -2,6 +2,7 @@ package org.android.go.sopt.sign
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.android.go.sopt.RequestSignUpDto
@@ -21,15 +22,36 @@ class SignupViewModel : ViewModel() {
     val name = MutableLiveData<String>()
     val hobby = MutableLiveData<String>()
 
-    val _checksignup : MutableLiveData<Boolean> = MutableLiveData()
+    private val _checksignup : MediatorLiveData<Boolean> = MediatorLiveData()
     val checksignup : LiveData<Boolean> = _checksignup
+
+    init {
+        setupFormValidation()
+    }
+
+    private fun setupFormValidation() {
+        _checksignup.addSource(id) { validateForm() }
+        _checksignup.addSource(pw) { validateForm() }
+        _checksignup.addSource(name) { validateForm() }
+        _checksignup.addSource(hobby) { validateForm() }
+    }
+
+    private fun validateForm() {
+        val isFormValid = canUserSignUp()
+        _checksignup.value = isFormValid
+    }
+
 
 
     fun check(){
-        if(ValidId(id.value))
+        if(canUserSignUp())
             _checksignup.value = true
     }
 
+    private fun canUserSignUp(): Boolean {
+        return ValidId(id.value) && ValidPw(pw.value) && id.value?.isNotBlank() == true &&
+                pw.value?.isNotBlank() == true && name.value?.isNotBlank() == true && hobby.value?.isNotBlank() == true
+    }
 
     fun signUp(id: String, password: String, name : String, skill : String) {
         signService.signup(

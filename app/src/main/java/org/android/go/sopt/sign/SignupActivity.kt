@@ -34,6 +34,7 @@ class SignupActivity : AppCompatActivity() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
+        binding.btnSignupEnd.isEnabled = false
 
         viewModel.id.observe(this) {
             if (viewModel.ValidId(it)) {
@@ -48,6 +49,11 @@ class SignupActivity : AppCompatActivity() {
             } else
                 binding.tvPwWarning.visibility = View.VISIBLE
         }
+
+        viewModel.checksignup.observe(this){ isFormValid ->
+            binding.btnSignupEnd.isEnabled = isFormValid
+        }
+
 
         binding.btnSignupEnd.setOnClickListener {
             viewModel.signUp(
@@ -69,9 +75,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
 
-    private fun canUserSignIn(): Boolean {
-        return viewModel.ValidId(binding.etID.toString()) && viewModel.ValidPw(binding.etPW.toString()) && binding.etName.text.isNotBlank() && binding.etHobby.text.isNotBlank()
-    }
+
 
 
 }
