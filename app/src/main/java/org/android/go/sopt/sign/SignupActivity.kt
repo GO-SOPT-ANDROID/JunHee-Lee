@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import org.android.go.sopt.R
 import org.android.go.sopt.RequestSignUpDto
 import org.android.go.sopt.ResponseSignUpDto
@@ -29,63 +31,23 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.etID.isEnabled = false
-        binding.etPW.isEnabled = false
-        binding.etHobby.isEnabled = false
-        binding.btnSignupEnd.isEnabled = false
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
 
-        binding.etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.etID.isEnabled = binding.etName.text.isNotBlank()
 
-                if (binding.etName.text.isNotBlank()) {
-                    binding.btnSignupEnd.isEnabled = false
-                }
-            }
+        viewModel.id.observe(this) {
+            if (viewModel.ValidId(it)) {
+                binding.tvIdWarning.visibility = View.INVISIBLE
+            } else
+                binding.tvIdWarning.visibility = View.VISIBLE
+        }
 
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnSignupEnd.isEnabled = canUserSignIn()
-            }
-
-        })
-
-        binding.etID.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.etPW.isEnabled = binding.etID.text.length in 6..10
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnSignupEnd.isEnabled = canUserSignIn()
-            }
-
-        })
-
-        binding.etPW.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.etHobby.isEnabled = binding.etPW.text.length in 8..12
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnSignupEnd.isEnabled = canUserSignIn()
-            }
-
-        })
-
-        binding.etHobby.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btnSignupEnd.isEnabled = binding.etHobby.text.isNotBlank()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                binding.btnSignupEnd.isEnabled = canUserSignIn()
-            }
-
-        })
-
+        viewModel.pw.observe(this) {
+            if (viewModel.ValidPw(it)) {
+                binding.tvPwWarning.visibility = View.INVISIBLE
+            } else
+                binding.tvPwWarning.visibility = View.VISIBLE
+        }
 
         binding.btnSignupEnd.setOnClickListener {
             viewModel.signUp(
@@ -104,13 +66,11 @@ class SignupActivity : AppCompatActivity() {
                 )
             )
         }
-
-
     }
 
 
     private fun canUserSignIn(): Boolean {
-        return binding.etID.text.length in 6..10 && binding.etPW.text.length in 8..12 && binding.etName.text.isNotBlank() && binding.etHobby.text.isNotBlank()
+        return viewModel.ValidId(binding.etID.toString()) && viewModel.ValidPw(binding.etPW.toString()) && binding.etName.text.isNotBlank() && binding.etHobby.text.isNotBlank()
     }
 
 

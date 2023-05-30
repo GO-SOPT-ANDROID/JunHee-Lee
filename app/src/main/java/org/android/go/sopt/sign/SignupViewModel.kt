@@ -16,6 +16,20 @@ class SignupViewModel : ViewModel() {
     private val _signUpResult: MutableLiveData<ResponseSignUpDto> = MutableLiveData()
     val signUpResult: LiveData<ResponseSignUpDto> = _signUpResult
 
+    val id = MutableLiveData<String>()
+    val pw = MutableLiveData<String>()
+    val name = MutableLiveData<String>()
+    val hobby = MutableLiveData<String>()
+
+    val _checksignup : MutableLiveData<Boolean> = MutableLiveData()
+    val checksignup : LiveData<Boolean> = _checksignup
+
+
+    fun check(){
+        if(ValidId(id.value))
+            _checksignup.value = true
+    }
+
 
     fun signUp(id: String, password: String, name : String, skill : String) {
         signService.signup(
@@ -45,4 +59,17 @@ class SignupViewModel : ViewModel() {
 
         })
     }
+
+
+     fun ValidId(id: String?): Boolean {
+        return id.isNullOrEmpty() || id.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,10}"))
+    }
+
+     fun ValidPw(pw: String?): Boolean {
+        return pw.isNullOrEmpty() || pw.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#%^&*()])[a-zA-Z0-9!@#%^&*()]{6,12}"))
+    }
+
+
+
+
 }
