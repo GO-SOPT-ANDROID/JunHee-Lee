@@ -40,14 +40,7 @@ class SignupViewModel : ViewModel() {
         val isFormValid = canUserSignUp()
         _checksignup.value = isFormValid
     }
-
-
-
-    fun check(){
-        if(canUserSignUp())
-            _checksignup.value = true
-    }
-
+    
     private fun canUserSignUp(): Boolean {
         return ValidId(id.value) && ValidPw(pw.value) && id.value?.isNotBlank() == true &&
                 pw.value?.isNotBlank() == true && name.value?.isNotBlank() == true && hobby.value?.isNotBlank() == true
