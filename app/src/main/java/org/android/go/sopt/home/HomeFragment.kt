@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import org.android.go.sopt.HomeServicePool
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.FragmentHomeBinding
@@ -40,23 +42,38 @@ class HomeFragment : Fragment() {
 
 
 
-        homeService.listuser().enqueue(object : retrofit2.Callback<ResponseHome> {
-            override fun onResponse(
-                call: Call<ResponseHome>,
-                response: Response<ResponseHome>,
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.data?.let {
-                        homeadapter.submitList(it)
-                    }
+        lifecycleScope.launch {
+            kotlin.runCatching {
+                homeService.listuser()
+            }.fold(
+                {
+                    homeadapter.submitList(it)
+                }, {
+                    Log.d("aaa", "서버통신 실패")
                 }
-            }
+            )
+        }
 
-            override fun onFailure(call: Call<ResponseHome>, t: Throwable) {
 
-            }
-
-        })
+//
+//        homeService.listuser().enqueue(object : retrofit2.Callback<ResponseHome> {
+//            override fun onResponse(
+//                call: Call<ResponseHome>,
+//                response: Response<ResponseHome>,
+//            ) {
+//                if (response.isSuccessful) {
+//                    response.body()?.data?.let {
+//                        homeadapter.submitList(it)
+//                        Log.d("listlist", it.toString())
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ResponseHome>, t: Throwable) {
+//
+//            }
+//
+//        })
     }
 
     override fun onDestroyView() {

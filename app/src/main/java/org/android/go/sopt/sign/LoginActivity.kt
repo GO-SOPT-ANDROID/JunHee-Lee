@@ -4,38 +4,32 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import org.android.go.sopt.R
-import org.android.go.sopt.RequestLogin
-import org.android.go.sopt.ResponseLogin
-import org.android.go.sopt.SignServicePool
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.home.HomeActivity
-import retrofit2.Call
-import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private val signService = SignServicePool.signService
+    private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+
+    // LiveData가 저장되어 있는 ViewModel
+    private val viewModel: LoginViewModel by viewModels<LoginViewModel>()
 
 
-    lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        //binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setResultSignUp()
-        clickSignUp()
-
-    }
-
-    private fun setResultSignUp() {
-        val intent = Intent(this, HomeActivity::class.java)
+        getFcmToken()
 
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -48,53 +42,46 @@ class LoginActivity : AppCompatActivity() {
 
 
         binding.btnLogin.setOnClickListener {
-            signService.signin(with(binding) {
-                RequestLogin(
-                    etID.text.toString(),
-                    etPW.text.toString(),
+            viewModel.signIn(
+                binding.etID.text.toString(),
+                binding.etPW.text.toString()
+            )
+        }
+
+        viewModel.signInResult.observe(this) { signInResult ->
+            startActivity(
+                Intent(
+                    this@LoginActivity,
+                    HomeActivity::class.java
+
                 )
-            }).enqueue(object : retrofit2.Callback<ResponseLogin> {
-                override fun onResponse(
-                    call: Call<ResponseLogin>,
-                    response: Response<ResponseLogin>,
-                ) {
-
-                    if (response.isSuccessful) {
-                        response.body()?.message?.let {
-                            Toast.makeText(
-                                this@LoginActivity, it, Toast.LENGTH_SHORT
-                            ).show()
-                        } ?: getString(R.string.login_complete)
-                        startActivity(intent)
-
-                    } else {
-                        Log.d("ffffff",response.body().toString())
-                        Snackbar.make(
-                            binding.root,
-                            response.body().toString(),
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
-                    // 왜 안 오노
-                    t.message?.let {
-                        Toast.makeText(this@LoginActivity, it, Toast.LENGTH_SHORT).show()
-                    } ?: "서버통신 실패(응답값 X)"
-
-                }
-            })
+            )
 
         }
 
+        clickSignUp()
+
     }
+
 
     private fun clickSignUp() {
         binding.btnSignup.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
         }
+    }
+
+    private fun getFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener{ task->
+            if (!task.isSuccessful) {
+                Log.w("tag", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            // Get new FCM registration token
+            val token = task.result
+            // Log
+            Log.d("tag", "token is $token")
+        })
     }
 }
 

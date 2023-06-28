@@ -2,10 +2,7 @@ package org.android.go.sopt
 
 import org.android.go.sopt.model.ResponseHome
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface SignService {
     @POST("sign-up")
@@ -21,9 +18,9 @@ interface SignService {
 
 interface HomeService {
     @GET("/api/users")
-    fun listuser(
+    suspend fun listuser(
         @Query("page") page: Int = 2
-    ): Call<ResponseHome>
+    ): List<ResponseHome.Data>
 }
 
 
