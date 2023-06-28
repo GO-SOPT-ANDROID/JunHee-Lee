@@ -1,11 +1,14 @@
 package org.android.go.sopt
 
 
+import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONArray
+import org.json.JSONObject
 import org.android.go.sopt.remote.AuthInterceptor
 import retrofit2.Retrofit
 
@@ -33,8 +36,8 @@ object HomeApiFactory {
             .baseUrl(BuildConfig.REQRES_BASE_URL)
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
-    }
 
+    }
 
     inline fun <reified T> create(): T = retrofit.create<T>(T::class.java)
 }

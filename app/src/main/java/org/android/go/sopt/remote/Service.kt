@@ -1,5 +1,6 @@
 package org.android.go.sopt
 
+import okhttp3.MultipartBody
 import org.android.go.sopt.model.ResponseHome
 import retrofit2.Call
 import retrofit2.http.*
@@ -21,6 +22,14 @@ interface HomeService {
     suspend fun listuser(
         @Query("page") page: Int = 2
     ): List<ResponseHome.Data>
+}
+
+interface ImageService {
+    @Multipart
+    @POST("upload")
+    fun uploadImage(
+        @Part file: MultipartBody.Part,
+    ): Call<Unit>
 }
 
 

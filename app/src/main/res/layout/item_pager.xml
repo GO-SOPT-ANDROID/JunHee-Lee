@@ -4,19 +4,41 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+<!--    <ImageView-->
+<!--        android:id="@+id/img_gallery"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginHorizontal="50dp"-->
+<!--        android:layout_marginVertical="30dp"-->
+<!--        android:src="@drawable/pic1"-->
+<!--        app:layout_constraintDimensionRatio="1"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:contentDescription="pager item image" />-->
+
+
     <ImageView
-        android:id="@+id/img_gallery"
-        android:layout_width="0dp"
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="30dp"
         android:src="@drawable/pic1"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="pager item image" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnGalleryPickImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:layout_marginTop="100dp"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
