@@ -3,11 +3,14 @@ package org.android.go.sopt.sign
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.messaging.FirebaseMessaging
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.home.HomeActivity
@@ -25,6 +28,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        getFcmToken()
 
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -64,6 +69,19 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, SignupActivity::class.java)
             resultLauncher.launch(intent)
         }
+    }
+
+    private fun getFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener{ task->
+            if (!task.isSuccessful) {
+                Log.w("tag", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            // Get new FCM registration token
+            val token = task.result
+            // Log
+            Log.d("tag", "token is $token")
+        })
     }
 }
 

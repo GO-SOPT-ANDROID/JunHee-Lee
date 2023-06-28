@@ -18,9 +18,9 @@ interface SignService {
 
 interface HomeService {
     @GET("/api/users")
-    fun listuser(
+    suspend fun listuser(
         @Query("page") page: Int = 2
-    ): Call<ResponseHome>
+    ): List<ResponseHome.Data>
 }
 
 

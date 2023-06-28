@@ -11,5 +11,4 @@ class AuthInterceptor : Interceptor {
             .build()
         return chain.proceed(headerRequest)
     }
-
 }

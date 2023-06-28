@@ -34,7 +34,6 @@ class SignupActivity : AppCompatActivity() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
 
-        binding.btnSignupEnd.isEnabled = false
 
         viewModel.id.observe(this) {
             if (viewModel.ValidId(it)) {
