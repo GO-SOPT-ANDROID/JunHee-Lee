@@ -1,29 +1,28 @@
 package org.android.go.sopt.sign
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.android.go.sopt.RequestSignUpDto
-import org.android.go.sopt.ResponseSignUpDto
-import org.android.go.sopt.SignServicePool.signService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.android.go.sopt.SoptServicePool.signService
+import timber.log.Timber
+
 
 class SignupViewModel : ViewModel() {
+    private val _signUpResult: MutableLiveData<Boolean> = MutableLiveData()
+    val signUpResult: LiveData<Boolean> = _signUpResult
 
-    private val _signUpResult: MutableLiveData<ResponseSignUpDto> = MutableLiveData()
-    val signUpResult: LiveData<ResponseSignUpDto> = _signUpResult
 
     val id = MutableLiveData<String>()
     val pw = MutableLiveData<String>()
     val name = MutableLiveData<String>()
     val hobby = MutableLiveData<String>()
 
-    private val _checksignup : MediatorLiveData<Boolean> = MediatorLiveData()
-    val checksignup : LiveData<Boolean> = _checksignup
+    private val _checksignup: MediatorLiveData<Boolean> = MediatorLiveData()
+    val checksignup: LiveData<Boolean> = _checksignup
 
     init {
         setupFormValidation()
@@ -40,51 +39,45 @@ class SignupViewModel : ViewModel() {
         val isFormValid = canUserSignUp()
         _checksignup.value = isFormValid
     }
-    
+
     private fun canUserSignUp(): Boolean {
         return ValidId(id.value) && ValidPw(pw.value) && id.value?.isNotBlank() == true &&
                 pw.value?.isNotBlank() == true && name.value?.isNotBlank() == true && hobby.value?.isNotBlank() == true
     }
 
-    fun signUp(id: String, password: String, name : String, skill : String) {
-        signService.signup(
-            RequestSignUpDto(
-                id,
-                password,
-                name,
-                skill
+    fun signUp(id: String, password: String, name: String, skill: String) {
+
+        viewModelScope.launch {
+            kotlin.runCatching {
+                signService.signup(
+                    RequestSignUpDto(
+                        id,
+                        password,
+                        name,
+                        skill
+                    )
+                )
+            }.fold(
+                {
+                    _signUpResult.value = true
+                    Timber.d(it.message)
+
+                },
+                {
+                    _signUpResult.value = false
+                }
             )
-        ).enqueue(object : Callback<ResponseSignUpDto> {
-            override fun onResponse(
-                call: Call<ResponseSignUpDto>,
-                response: Response<ResponseSignUpDto>
-            ) {
-                if (response.isSuccessful) {
-                    _signUpResult.value = response.body()
-                }
-                else {
-                    Log.d("ffffff",response.body().toString())
-
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
-
-            }
-
-        })
+        }
     }
 
 
-     fun ValidId(id: String?): Boolean {
+    fun ValidId(id: String?): Boolean {
         return id.isNullOrEmpty() || id.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,10}"))
     }
 
-     fun ValidPw(pw: String?): Boolean {
+    fun ValidPw(pw: String?): Boolean {
         return pw.isNullOrEmpty() || pw.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#%^&*()])[a-zA-Z0-9!@#%^&*()]{6,12}"))
     }
-
-
 
 
 }

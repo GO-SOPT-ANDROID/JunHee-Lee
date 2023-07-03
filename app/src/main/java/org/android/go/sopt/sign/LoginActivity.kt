@@ -3,17 +3,16 @@ package org.android.go.sopt.sign
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.FirebaseMessaging
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.home.HomeActivity
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
@@ -21,15 +20,14 @@ class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
 
     // LiveData가 저장되어 있는 ViewModel
-    private val viewModel: LoginViewModel by viewModels<LoginViewModel>()
+    private val viewModel: LoginViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.plant(Timber.DebugTree())
         super.onCreate(savedInstanceState)
-        //binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        getFcmToken()
+        setContentView(binding.root)
 
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -49,13 +47,18 @@ class LoginActivity : AppCompatActivity() {
         }
 
         viewModel.signInResult.observe(this) { signInResult ->
-            startActivity(
-                Intent(
-                    this@LoginActivity,
-                    HomeActivity::class.java
-
+            if (signInResult) {
+                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(
+                        this@LoginActivity,
+                        HomeActivity::class.java
+                    )
                 )
-            )
+            }
+            else{
+                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
 
         }
 
@@ -71,18 +74,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun getFcmToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener{ task->
-            if (!task.isSuccessful) {
-                Log.w("tag", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-            // Get new FCM registration token
-            val token = task.result
-            // Log
-            Log.d("tag", "token is $token")
-        })
-    }
 }
 
 

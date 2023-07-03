@@ -10,27 +10,21 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
 import org.json.JSONObject
-import org.android.go.sopt.remote.AuthInterceptor
 import retrofit2.Retrofit
 
-object SignApiFactory {
+object ApiFactory {
 
-    private val client by lazy {
-        OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
-            level =
-                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-        }).addInterceptor(AuthInterceptor()).build()
-
-        OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level =
-                        if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-                }
-            ).build()
-
-    }
+//    private val client by lazy {
+//        OkHttpClient.Builder()
+//            .addInterceptor(AuthInterceptor())
+//            .addInterceptor(
+//                HttpLoggingInterceptor().apply {
+//                    level =
+//                        if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+//                }
+//            ).build()
+//
+//    }
 
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
@@ -45,8 +39,10 @@ object SignApiFactory {
             when {
                 message.isJsonObject() ->
                     Log.d("Retrofit2", JSONObject(message).toString(4))
+
                 message.isJsonArray() ->
                     Log.d("Retrofit2", JSONArray(message).toString(4))
+
                 else -> {
                     Log.d("Retrofit2", "CONNECTION INFO -> $message")
                 }
@@ -66,8 +62,7 @@ object SignApiFactory {
     inline fun <reified T> create(): T = retrofit.create<T>(T::class.java)
 }
 
-object SignServicePool {
-    val signService = SignApiFactory.create<SignService>()
-
-    val imageService = SignApiFactory.create<ImageService>()
+object SoptServicePool {
+    val signService = ApiFactory.create<SignService>()
+    val imageService = ApiFactory.create<ImageService>()
 }

@@ -7,21 +7,21 @@ import retrofit2.http.*
 
 interface SignService {
     @POST("sign-up")
-    fun signup(
+    suspend fun signup(
         @Body request: RequestSignUpDto
-    ): Call<ResponseSignUpDto>
+    ): ResponseSignUpDto
 
     @POST("sign-in")
-    fun signin(
+    suspend fun signin(
         @Body request: RequestLogin
-    ): Call<ResponseLogin>
+    ): ResponseLogin
 }
 
 interface HomeService {
     @GET("/api/users")
     suspend fun listuser(
         @Query("page") page: Int = 2
-    ): List<ResponseHome.Data>
+    ): ResponseHome
 }
 
 interface ImageService {

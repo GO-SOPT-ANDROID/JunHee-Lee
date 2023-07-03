@@ -3,28 +3,18 @@ package org.android.go.sopt.sign
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
-import org.android.go.sopt.R
-import org.android.go.sopt.RequestSignUpDto
-import org.android.go.sopt.ResponseSignUpDto
-import org.android.go.sopt.SignServicePool
-import org.android.go.sopt.databinding.ActivityLoginBinding
+import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.databinding.ActivitySignupBinding
-import retrofit2.Call
-import retrofit2.Response
+import timber.log.Timber
 
 class SignupActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySignupBinding.inflate(layoutInflater) }
 
     // LiveData가 저장되어 있는 ViewModel
-    private val viewModel: SignupViewModel by viewModels<SignupViewModel>()
+    private val viewModel: SignupViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +39,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.tvPwWarning.visibility = View.VISIBLE
         }
 
-        viewModel.checksignup.observe(this){ isFormValid ->
+        viewModel.checksignup.observe(this) { isFormValid ->
             binding.btnSignupEnd.isEnabled = isFormValid
         }
 
@@ -64,17 +54,23 @@ class SignupActivity : AppCompatActivity() {
         }
 
         viewModel.signUpResult.observe(this) { signupResult ->
-            startActivity(
-                Intent(
+
+            if (signupResult){
+                val intent = Intent(
                     this@SignupActivity,
                     LoginActivity::class.java
                 )
-            )
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+            else{
+                Snackbar.make(
+                    binding.root, "회원가입 실패", Snackbar.LENGTH_SHORT
+                ).show()
+            }
+
         }
     }
-
-
-
 
 
 }
