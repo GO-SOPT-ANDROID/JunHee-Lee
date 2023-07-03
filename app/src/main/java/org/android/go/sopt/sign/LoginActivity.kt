@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.R
 import org.android.go.sopt.databinding.ActivityLoginBinding
 import org.android.go.sopt.home.HomeActivity
+import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
@@ -23,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.plant(Timber.DebugTree())
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)

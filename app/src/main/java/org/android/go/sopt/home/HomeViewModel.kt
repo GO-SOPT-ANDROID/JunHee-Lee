@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.android.go.sopt.HomeServicePool.homeService
 import org.android.go.sopt.model.ResponseHome
+import timber.log.Timber
 
 class HomeViewModel : ViewModel() {
 
@@ -26,7 +27,8 @@ class HomeViewModel : ViewModel() {
                 {
                     _followList.value = it.data.toList()
                 }, {
-                    Log.d("서버통신 실패", it.toString())
+                    Timber.e(it.message)
+
                 }
             )
         }

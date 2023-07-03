@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.android.go.sopt.RequestSignUpDto
 import org.android.go.sopt.SoptServicePool.signService
+import timber.log.Timber
+
 
 class SignupViewModel : ViewModel() {
     private val _signUpResult: MutableLiveData<Boolean> = MutableLiveData()
@@ -19,8 +21,8 @@ class SignupViewModel : ViewModel() {
     val name = MutableLiveData<String>()
     val hobby = MutableLiveData<String>()
 
-    private val _checksignup : MediatorLiveData<Boolean> = MediatorLiveData()
-    val checksignup : LiveData<Boolean> = _checksignup
+    private val _checksignup: MediatorLiveData<Boolean> = MediatorLiveData()
+    val checksignup: LiveData<Boolean> = _checksignup
 
     init {
         setupFormValidation()
@@ -37,13 +39,13 @@ class SignupViewModel : ViewModel() {
         val isFormValid = canUserSignUp()
         _checksignup.value = isFormValid
     }
-    
+
     private fun canUserSignUp(): Boolean {
         return ValidId(id.value) && ValidPw(pw.value) && id.value?.isNotBlank() == true &&
                 pw.value?.isNotBlank() == true && name.value?.isNotBlank() == true && hobby.value?.isNotBlank() == true
     }
 
-    fun signUp(id: String, password: String, name : String, skill : String) {
+    fun signUp(id: String, password: String, name: String, skill: String) {
 
         viewModelScope.launch {
             kotlin.runCatching {
@@ -58,6 +60,8 @@ class SignupViewModel : ViewModel() {
             }.fold(
                 {
                     _signUpResult.value = true
+                    Timber.d(it.message)
+
                 },
                 {
                     _signUpResult.value = false
@@ -67,15 +71,13 @@ class SignupViewModel : ViewModel() {
     }
 
 
-     fun ValidId(id: String?): Boolean {
+    fun ValidId(id: String?): Boolean {
         return id.isNullOrEmpty() || id.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,10}"))
     }
 
-     fun ValidPw(pw: String?): Boolean {
+    fun ValidPw(pw: String?): Boolean {
         return pw.isNullOrEmpty() || pw.matches(Regex("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#%^&*()])[a-zA-Z0-9!@#%^&*()]{6,12}"))
     }
-
-
 
 
 }

@@ -26,4 +26,5 @@
     <string name="login_complete">로그인 성공!</string>
     <string name="id_warning_message">ID 조건: 영문, 숫자가 포함되어야 하고 6~10글자 이내</string>
     <string name="password_warning_message">Password 조건: 영문, 숫자, 특수문자가 포함되어야 하고 6~12글자 이내</string>
+    <string name="autologin">자동로그인</string>
 </resources>

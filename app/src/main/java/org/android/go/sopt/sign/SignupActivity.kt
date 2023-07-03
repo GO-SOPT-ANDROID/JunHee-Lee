@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import org.android.go.sopt.databinding.ActivitySignupBinding
+import timber.log.Timber
 
 class SignupActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySignupBinding.inflate(layoutInflater) }
